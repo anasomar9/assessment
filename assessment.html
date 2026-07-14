@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Assessment - Ahmed Rabie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { overscroll-behavior: none; }
+  body {
+    background: #0d0d0d;
+    min-height: 100vh;
+    font-family: 'Tajawal', -apple-system, 'Segoe UI', sans-serif;
+    color: white;
+    /* حماية من إزاحة الشكل أثناء تحميل الخطوط: الصفحة مش قابلة للمس غير بعد ما تخلص تحميل */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease;
+  }
+  body.ready { opacity: 1; visibility: visible; }
+  body.not-ready * { pointer-events: none !important; }
+
+  .header { background: radial-gradient(ellipse at 60% 50%, #7a0000 0%, #2d0000 60%, #080000 100%); padding: 28px 20px; text-align: center; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 20%, rgba(180,0,0,0.25) 0%, transparent 60%); pointer-events: none; }
+  .diag { position: absolute; width: 140%; height: 1.5px; background: linear-gradient(90deg, transparent, #cc0000, transparent); top: 70%; left: -20%; transform: rotate(-3deg); opacity: 0.5; pointer-events: none; }
+  .ar-bg { position: absolute; font-family: 'Cinzel', serif; font-size: 100px; font-weight: 900; color: rgba(255,255,255,0.04); bottom: -10px; right: 10px; pointer-events: none; user-select: none; }
+  .header-inner { position: relative; z-index: 2; }
+  .h-brand { font-family: 'Cinzel', serif; font-size: 10px; color: #ff3333; letter-spacing: 2px; margin-bottom: 6px; }
+  .h-title { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900; color: white; letter-spacing: 2px; }
+  .h-title span { color: #cc0000; }
+  .h-sub { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 1px; margin-top: 4px; }
+
+  .body { padding: 20px 16px; display: flex; flex-direction: column; gap: 14px; position: relative; z-index: 1; }
+  .section-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; overflow: hidden; }
+  .section-head { background: linear-gradient(135deg, rgba(150,0,0,0.2), rgba(60,0,0,0.1)); padding: 12px 16px; display: flex; align-items: center; gap: 10px; direction: rtl; border-bottom: 1px solid rgba(180,0,0,0.15); }
+  .s-icon { font-size: 18px; }
+  .s-title { font-family: 'Cinzel', serif; font-size: 13px; color: #ff4444; font-weight: 700; letter-spacing: 1px; }
+  .section-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .q-item { direction: rtl; }
+  .q-label { font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 8px; display: block; }
+
+  .q-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 13px 13px;
+    color: white;
+    font-size: 16px; /* 16px عشان iOS متعملش زوم أوتوماتيك على الـ input */
+    font-family: 'Tajawal', sans-serif;
+    outline: none;
+    direction: rtl;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-user-select: text;
+    user-select: text;
+    touch-action: manipulation;
+    position: relative;
+    z-index: 1;
+  }
+  .q-input:focus { border-color: rgba(180,0,0,0.5); }
+  .q-input::placeholder { color: rgba(255,255,255,0.2); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; direction: rtl; }
+  .chip {
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.2s;
+    font-family: 'Tajawal', sans-serif;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+  .chip.on { border-color: #ff3333; color: white; background: linear-gradient(135deg, #aa0000, #660000); font-weight: 700; box-shadow: 0 0 12px rgba(200,0,0,0.5); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .wa-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #128C7E, #075E54);
+    border: none;
+    border-radius: 12px;
+    padding: 17px;
+    color: white;
+    font-size: 16px;
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 6px;
+    touch-action: manipulation;
+    -webkit-appearance: none;
+  }
+  .wa-btn:active { transform: scale(0.98); }
+  .wa-icon { font-size: 22px; }
+
+  .footer-bar { padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.3); margin-top: 10px; }
+  .f-brand { font-family: 'Cinzel', serif; font-size: 10px; color: #e03333; font-weight: 700; letter-spacing: 1px; }
+  .f-links { display: flex; gap: 12px; font-size: 10px; color: rgba(255,255,255,0.35); }
+
+  .loader {
+    position: fixed; inset: 0; background: #0d0d0d;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999; transition: opacity 0.25s ease;
+  }
+  .loader.hide { opacity: 0; pointer-events: none; }
+  .loader-dot { width: 10px; height: 10px; border-radius: 50%; background: #cc0000; animation: pulse 1s infinite ease-in-out; }
+  @keyframes pulse { 0%,100% { transform: scale(0.6); opacity: 0.4; } 50% { transform: scale(1); opacity: 1; } }
+</style>
+</head>
+<body class="not-ready" style="direction:rtl;">
+
+<div class="loader" id="loader"><div class="loader-dot"></div></div>
+
+<div class="header">
+  <div class="diag"></div><div class="ar-bg">AR</div>
+  <div class="header-inner">
+    <div class="h-brand">AHMED RABIE | ONLINE COACHING</div>
+    <div class="h-title">Client <span>Assessment</span></div>
+    <div class="h-sub">سيتم إرسال بياناتك مباشرة على واتساب</div>
+  </div>
+</div>
+
+<div class="body">
+  <div class="section-card">
+    <div class="section-head"><div class="s-icon">📋</div><div class="s-title">البيانات الشخصية</div></div>
+    <div class="section-body">
+      <div class="q-item"><label class="q-label">الاسم</label><input class="q-input" id="name" placeholder="اكتب اسمك..."></div>
+      <div class="q-item"><label class="q-label">الجنس</label><div class="chips"><div class="chip" data-key="gender">👨 ذكر</div><div class="chip" data-key="gender">👩 أنثى</div></div></div>
+      <div class="two-col">
+        <div class="q-item"><label class="q-label">السن</label><input class="q-input" id="age" placeholder="25" type="number" inputmode="numeric"></div>
+        <div class="q-item"><label class="q-label">الطول (سم)</label><input class="q-input" id="height" placeholder="175" type="number" inputmode="numeric"></div>
+      </div>
+      <div class="q-item"><label class="q-label">الوزن (كجم)</label><input class="q-input" id="weight" placeholder="80" type="number" inputmode="numeric"></div>
+      <div class="q-item"><label class="q-label">الهدف الرئيسي</label><div class="chips"><div class="chip" data-key="goal">🔥 حرق دهون</div><div class="chip" data-key="goal">💪 زيادة وزن</div><div class="chip" data-key="goal">🏋️ بناء عضل</div><div class="chip" data-key="goal">❤️ صحة عامة</div></div></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><div class="s-icon">🏥</div><div class="s-title">الحالة الصحية</div></div>
+    <div class="section-body">
+      <div class="q-item"><label class="q-label">أمراض مزمنة؟</label><input class="q-input" id="diseases" placeholder="لو لا اكتب لا..."></div>
+      <div class="q-item"><label class="q-label">مشاكل في العظام / المفاصل؟</label><input class="q-input" id="joints" placeholder="لو لا اكتب لا..."></div>
+      <div class="q-item"><label class="q-label">بتنام كام ساعة؟</label><div class="chips"><div class="chip" data-key="sleep">أقل من 6</div><div class="chip" data-key="sleep">6-8 ساعات</div><div class="chip" data-key="sleep">أكتر من 8</div></div></div>
+      <div class="q-item"><label class="q-label">إحساس من أكل معين؟</label><input class="q-input" id="sensitivity" placeholder="مثال: انتفاخ من اللبن..."></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><div class="s-icon">🍽️</div><div class="s-title">عادات الأكل</div></div>
+    <div class="section-body">
+      <div class="q-item"><label class="q-label">نظام الأكل الحالي؟</label><input class="q-input" id="currentdiet" placeholder="وصف مختصر..."></div>
+      <div class="q-item"><label class="q-label">بتاكل كام مرة في اليوم؟</label><div class="chips"><div class="chip" data-key="meals">2 مرات</div><div class="chip" data-key="meals">3 مرات</div><div class="chip" data-key="meals">أكتر من 3</div></div></div>
+      <div class="q-item"><label class="q-label">وجبات سريعة / سكريات كتير؟</label><div class="chips"><div class="chip" data-key="junk">أيوه</div><div class="chip" data-key="junk">أحياناً</div><div class="chip" data-key="junk">لا</div></div></div>
+      <div class="q-item"><label class="q-label">بتشرب مياه كويس؟</label><div class="chips"><div class="chip" data-key="water">أيوه</div><div class="chip" data-key="water">أحياناً</div><div class="chip" data-key="water">لا</div></div></div>
+      <div class="q-item"><label class="q-label">مشروبات غازية / كافيين؟</label><div class="chips"><div class="chip" data-key="caffeine">أيوه</div><div class="chip" data-key="caffeine">أحياناً</div><div class="chip" data-key="caffeine">لا</div></div></div>
+      <div class="q-item"><label class="q-label">أكل بتحبه / مش بتحبه؟</label><input class="q-input" id="foodpref" placeholder="مثال: بحب فراخ، مش بحب سمك..."></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><div class="s-icon">💪</div><div class="s-title">النشاط والتمرين</div></div>
+    <div class="section-body">
+      <div class="q-item"><label class="q-label">مستوى نشاطك اليومي</label><div class="chips"><div class="chip" data-key="activity">😴 قليل الحركة</div><div class="chip" data-key="activity">🚶 معتدل</div><div class="chip" data-key="activity">🏃 نشيط</div><div class="chip" data-key="activity">⚡ نشيط جداً</div></div></div>
+      <div class="q-item"><label class="q-label">شغال ولا لا؟</label><div class="chips"><div class="chip" data-key="work">💼 شغال</div><div class="chip" data-key="work">🎓 طالب / لا</div></div></div>
+      <div class="q-item"><label class="q-label">هتتمرن كام يوم في الأسبوع؟</label><div class="chips"><div class="chip" data-key="traindays">2-3 أيام</div><div class="chip" data-key="traindays">4-5 أيام</div><div class="chip" data-key="traindays">6-7 أيام</div></div></div>
+      <div class="q-item"><label class="q-label">نوع التمرين؟</label><input class="q-input" id="traintype" placeholder="مثال: جيم، كارديو، كورة..."></div>
+    </div>
+  </div>
+
+  <button class="wa-btn" id="sendBtn" type="button"><span class="wa-icon">💬</span> إرسال على واتساب</button>
+</div>
+
+<div class="footer-bar">
+  <span class="f-brand">AHMED RABIE | ONLINE COACHING</span>
+  <div class="f-links"><span>Instagram</span><span>Tiktok</span></div>
+</div>
+
+<script>
+(function () {
+  var body = document.body;
+  var loader = document.getElementById('loader');
+
+  function reveal() {
+    body.classList.remove('not-ready');
+    body.classList.add('ready');
+    loader.classList.add('hide');
+    setTimeout(function () { loader.remove(); }, 300);
+  }
+
+  // منستناش تحميل الخطوط لغير ما هي فعلا جاهزة (أو نطلع بعد 1.2 ثانية كحد أقصى عشان مايتعلقش)
+  var fallback = setTimeout(reveal, 1200);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      clearTimeout(fallback);
+      reveal();
+    });
+  } else {
+    clearTimeout(fallback);
+    window.addEventListener('load', reveal);
+  }
+
+  var d = {};
+
+  // event delegation واحد لكل الـ chips، بيشتغل بـ pointerup عشان يبقى دقيق على iOS
+  document.querySelectorAll('.chips').forEach(function (group) {
+    group.addEventListener('click', function (e) {
+      var chip = e.target.closest('.chip');
+      if (!chip || !group.contains(chip)) return;
+      group.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('on'); });
+      chip.classList.add('on');
+      d[chip.dataset.key] = chip.textContent.trim();
+    });
+  });
+
+  function val(id) {
+    var el = document.getElementById(id);
+    return (el && el.value.trim()) || '—';
+  }
+
+  document.getElementById('sendBtn').addEventListener('click', function () {
+    d.name = val('name');
+    d.age = val('age');
+    d.height = val('height');
+    d.weight = val('weight');
+    d.diseases = val('diseases');
+    d.joints = val('joints');
+    d.sensitivity = val('sensitivity');
+    d.currentdiet = val('currentdiet');
+    d.foodpref = val('foodpref');
+    d.traintype = val('traintype');
+
+    var msg = "🏋️ *Client Assessment — Ahmed Rabie Coaching*\n\n"
+      + "📋 *البيانات الشخصية*\n"
+      + "• الاسم: " + d.name + "\n"
+      + "• الجنس: " + (d.gender || '—') + "\n"
+      + "• السن: " + d.age + "\n"
+      + "• الطول: " + d.height + " سم\n"
+      + "• الوزن: " + d.weight + " كجم\n"
+      + "• الهدف: " + (d.goal || '—') + "\n\n"
+      + "🏥 *الحالة الصحية*\n"
+      + "• أمراض مزمنة: " + d.diseases + "\n"
+      + "• مشاكل مفاصل: " + d.joints + "\n"
+      + "• النوم: " + (d.sleep || '—') + "\n"
+      + "• إحساس من أكل: " + d.sensitivity + "\n\n"
+      + "🍽️ *عادات الأكل*\n"
+      + "• نظام الأكل الحالي: " + d.currentdiet + "\n"
+      + "• عدد الوجبات: " + (d.meals || '—') + "\n"
+      + "• وجبات سريعة: " + (d.junk || '—') + "\n"
+      + "• المياه: " + (d.water || '—') + "\n"
+      + "• كافيين: " + (d.caffeine || '—') + "\n"
+      + "• تفضيلات: " + d.foodpref + "\n\n"
+      + "💪 *النشاط والتمرين*\n"
+      + "• مستوى النشاط: " + (d.activity || '—') + "\n"
+      + "• شغال: " + (d.work || '—') + "\n"
+      + "• أيام التمرين: " + (d.traindays || '—') + "\n"
+      + "• نوع التمرين: " + d.traintype;
+
+    var phone = '201154596867';
+    window.location.href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+  });
+})();
+</script>
+</body>
+</html>
